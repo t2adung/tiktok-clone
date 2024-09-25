@@ -24,4 +24,4 @@ logs
 !.env.example
 
 # video
-.mp4
+*.mp4
