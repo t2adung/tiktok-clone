@@ -37,6 +37,4 @@
     let email = ref(null)
     let password = ref(null)
     let errors = ref(null)
-
-
 </script>
