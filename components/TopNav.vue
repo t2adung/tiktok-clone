@@ -23,34 +23,36 @@
                     <span class="hidden sm:block px-2 font-medium text-[15px]">Upload</span>
                 </button>
                 <div v-if="!$userStore.id" class="flex items-center">
-                    <button $click="$generalStore.isLoginOpen = true" 
+                    <button @click="$generalStore.isLoginOpen = true" 
                         class="flex items-center bg-[#F02C56] text-white border rounded-md px-3 py-[6px]">
                         <Icon name="mdi:login" color="#000000" size="22" />
                         <span class="hidden sm:block px-2 font-medium text-[15px]">Login</span>
                     </button>
                     <Icon name="mdi:dots-vertical" color="#161724" size="25" />
                 </div>
-                <div class="flex items-center">
+                <div v-else class="flex items-center">
                     <Icon class="ml-1 mr-4" name="carbon:send-alt" color="#161724" size="30" />
                     <Icon class="mr-5" name="bx:message-detail" color="#161724" size="27" />
                     <div class="relative">
-                        <button class="mt-1" @click="showMenu =! showMenu">
-                            <img class="rounded-full" width="33" src="https://picsum.photos/id/83/300/320"
+                        <button class="mt-1" @click="showMenu = !showMenu">
+                            <img class="rounded-full" width="33" :src="$userStore.image"
                                 alt="Profile picture">
                         </button>
                         <div v-if="showMenu" id="PopupMenu" class="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[43px] -right-2">
-                            <NuxtLink @click="$event => showMenu = false"
+                            <NuxtLink
+                                :to="`/profile/${$userStore.id}`"
+                                @click="$event => showMenu = false"
                                 class="flex items-center justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer">
                                 <Icon name="ph:user" size="20" />
                                 <span class="pl-2 font-semibold text-sm">Profile</span>
                             </NuxtLink>
                             <div
+                                @click="logout()"
                                 class="flex items-center justify-start py-3 px-1.5 hover:bg-gray-100 border-t cursor-pointer">
                                 <Icon name="ic:outline-login" size="20" />
                                 <span class="pl-2 font-semibold text-sm">Log out</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -59,8 +61,35 @@
 </template>
 
 <script setup>
-    const { $userStore, $generalStore } = useNuxtApp();
+const { $userStore, $generalStore } = useNuxtApp();
 
-    const route = useRoute();
-    let showMenu = ref(false);  
+const route = useRoute();
+const router = useRouter();
+let showMenu = ref(false);  
+
+onUnmounted(() => {
+    document.addEventListener('mouseup', function(e) {
+        let popupMenu = document.getElementById('PopupMenu');
+        if (!popupMenu.contains(e.target)) {
+            showMenu.value = false
+        }
+    });
+});
+
+const isLoggedIn = () => {
+    if ($userStore.id) {
+        router.push('/upload');
+    } else {
+        $generalStore.isLoginOpen = true;
+    }
+}
+
+const logout = () => {
+    try {
+        $userStore.logout();
+        router.push('/');
+    } catch (e) {
+        console.error(e);
+    }
+}
 </script>

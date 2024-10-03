@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-    const emit = defineEmits('update:input');
+    const emit = defineEmits(['update:input']);
     const props = defineProps(['input', 'placeholder', 'inputType', 'max', 'autoFocus', 'error']);
     const { input, placeholder, inputType, max, autoFocus, error } = toRefs(props)
     onMounted(() => {
