@@ -26,7 +26,7 @@
             :disabled="(!email || !password)"
             :class="(!email || !password) ? 'bg-gray-200' : 'bg-[#F02C56]'"
             class="w-full text-[17px] font-semibold text-white py-3 rounded-sm"
-            click="login()" 
+            @click="login()" 
         >
             Log in
         </button>
